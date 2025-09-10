@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Camera as CameraIcon, Upload, Scan, AlertTriangle, CheckCircle } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Camera as CameraIcon, Upload, Scan, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,10 @@ const Camera = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [showCamera, setShowCamera] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleScan = () => {
     setIsScanning(true);
@@ -43,11 +47,71 @@ const Camera = () => {
     input.accept = 'image/*';
     input.onchange = () => {
       if (input.files?.[0]) {
-        handleScan();
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setCapturedImage(e.target?.result as string);
+          handleScan();
+        };
+        reader.readAsDataURL(file);
       }
     };
     input.click();
   };
+
+  const startCamera = useCallback(async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+        audio: false
+      });
+      setStream(mediaStream);
+      setShowCamera(true);
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      alert('Unable to access camera. Please check permissions.');
+    }
+  }, []);
+
+  const stopCamera = useCallback(() => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setShowCamera(false);
+  }, [stream]);
+
+  const capturePhoto = useCallback(() => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      
+      if (ctx) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        
+        const imageData = canvas.toDataURL('image/jpeg');
+        setCapturedImage(imageData);
+        stopCamera();
+        handleScan();
+      }
+    }
+  }, [stopCamera]);
+
+  // Cleanup camera on component unmount
+  useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -74,7 +138,7 @@ const Camera = () => {
             {/* Scan Options */}
             <div className="grid gap-4 mb-8">
               <Button 
-                onClick={() => setShowCamera(true)}
+                onClick={startCamera}
                 className="btn-hero h-16 text-lg animate-slide-up"
               >
                 <CameraIcon size={24} className="mr-3" />
@@ -140,18 +204,34 @@ const Camera = () => {
         {showCamera && !isScanning && !result && (
           <div className="space-y-6">
             {/* Camera Interface */}
-            <Card className="card-farm text-center">
-              <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center mb-4">
-                <div className="text-gray-500">
-                  <CameraIcon size={48} className="mx-auto mb-2 animate-float" />
-                  <p>Camera interface would load here</p>
-                  <p className="text-sm">(This is a demo)</p>
+            <Card className="card-farm">
+              <div className="relative bg-black rounded-lg overflow-hidden mb-4">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full h-64 object-cover"
+                />
+                <canvas ref={canvasRef} className="hidden" />
+                
+                {/* Camera overlay */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-4 border-2 border-white/50 rounded-lg">
+                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary"></div>
+                    <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-primary"></div>
+                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-primary"></div>
+                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary"></div>
+                  </div>
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black/50 px-2 py-1 rounded">
+                    Focus on affected crop area
+                  </div>
                 </div>
               </div>
               
               <div className="flex gap-3 justify-center">
                 <Button
-                  onClick={handleScan}
+                  onClick={capturePhoto}
                   className="btn-hero animate-pulse-glow"
                 >
                   <CameraIcon size={20} className="mr-2" />
@@ -159,10 +239,11 @@ const Camera = () => {
                 </Button>
                 
                 <Button
-                  onClick={() => setShowCamera(false)}
+                  onClick={stopCamera}
                   variant="outline"
                   className="px-6"
                 >
+                  <X size={20} className="mr-2" />
                   Cancel
                 </Button>
               </div>
@@ -171,25 +252,41 @@ const Camera = () => {
         )}
 
         {isScanning && (
-          <Card className="card-farm text-center animate-slide-up">
-            <div className="py-12">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Scan className="text-primary animate-spin" size={32} />
-              </div>
-              <h3 className="font-bold text-lg mb-2">Analyzing your crop...</h3>
-              <p className="text-muted-foreground">
-                Our AI is examining the image for diseases and pests
-              </p>
-              
-              <div className="flex justify-center mt-6">
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0s" }}></div>
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+          <div className="space-y-6 animate-slide-up">
+            {/* Show captured image during analysis */}
+            {capturedImage && (
+              <Card className="card-farm">
+                <h4 className="font-semibold mb-3">Captured Image:</h4>
+                <div className="rounded-lg overflow-hidden mb-4">
+                  <img 
+                    src={capturedImage} 
+                    alt="Captured crop" 
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+              </Card>
+            )}
+            
+            <Card className="card-farm text-center">
+              <div className="py-12">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Scan className="text-primary animate-spin" size={32} />
+                </div>
+                <h3 className="font-bold text-lg mb-2">Analyzing your crop...</h3>
+                <p className="text-muted-foreground">
+                  Our AI is examining the image for diseases and pests
+                </p>
+                
+                <div className="flex justify-center mt-6">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0s" }}></div>
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
         )}
 
         {result && (
