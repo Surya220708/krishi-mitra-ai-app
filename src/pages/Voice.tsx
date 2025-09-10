@@ -54,9 +54,27 @@ const Voice = () => {
 
   const speakText = (text: string) => {
     if ('speechSynthesis' in window) {
+      // Stop any ongoing speech first
+      speechSynthesis.cancel();
+      
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'hi-IN';
-      speechSynthesis.speak(utterance);
+      utterance.lang = 'en-IN';
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      
+      // Wait for voices to load if needed
+      const speak = () => {
+        speechSynthesis.speak(utterance);
+      };
+      
+      if (speechSynthesis.getVoices().length > 0) {
+        speak();
+      } else {
+        speechSynthesis.onvoiceschanged = () => {
+          speak();
+        };
+      }
     }
   };
 
