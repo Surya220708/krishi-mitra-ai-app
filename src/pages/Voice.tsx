@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Volume2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { getVoiceResponse } from "@/hooks/useRealTimeData";
 
 interface ChatMessage {
   id: string;
@@ -21,34 +22,70 @@ const Voice = () => {
       timestamp: new Date()
     }
   ]);
+  const recognitionRef = useRef<any>(null);
 
-  const toggleListening = () => {
-    setIsListening(!isListening);
-    
-    if (!isListening) {
-      // Simulate voice recognition
-      setTimeout(() => {
+  useEffect(() => {
+    // Initialize speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-IN';
+      
+      recognitionRef.current.onstart = () => {
+        console.log('Speech recognition started');
+      };
+      
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        console.log('Speech recognized:', transcript);
+        
+        // Add user message
         const userMessage: ChatMessage = {
           id: Date.now().toString(),
-          text: "What's the best time to harvest wheat?",
+          text: transcript,
           isUser: true,
           timestamp: new Date()
         };
         setMessages(prev => [...prev, userMessage]);
         
-        // Simulate AI response
+        // Generate AI response
         setTimeout(() => {
+          const response = getVoiceResponse(transcript);
           const aiResponse: ChatMessage = {
             id: (Date.now() + 1).toString(),
-            text: "The best time to harvest wheat is when the grain moisture is between 18-20%. Look for golden-yellow color and firm grains. Early morning harvesting is ideal to avoid grain loss.",
+            text: response,
             isUser: false,
             timestamp: new Date()
           };
           setMessages(prev => [...prev, aiResponse]);
-        }, 2000);
-        
+        }, 1000);
+      };
+      
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
         setIsListening(false);
-      }, 3000);
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert('Speech recognition not supported in this browser');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      setIsListening(true);
+      recognitionRef.current.start();
     }
   };
 
