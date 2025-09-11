@@ -14,6 +14,8 @@ import {
 import { Card } from "@/components/ui/card";
 import heroImage from "@/assets/farm-hero.jpg";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const featureCards = [
   {
@@ -55,21 +57,22 @@ const featureCards = [
 ];
 
 const Home = () => {
+  const { t } = useLanguage();
   const [farmerName] = useState("Ravi");
-  const [greeting, setGreeting] = useState("Good Morning");
+  const [greeting, setGreeting] = useState("");
   const [currentWeather] = useState({
     temp: "28°C",
     humidity: "65%",
     wind: "12 km/h",
-    condition: "Partly Cloudy"
+    condition: t('home.weather.condition')
   });
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good Morning");
-    else if (hour < 17) setGreeting("Good Afternoon");
-    else setGreeting("Good Evening");
-  }, []);
+    if (hour < 12) setGreeting(t('common.greeting.morning'));
+    else if (hour < 17) setGreeting(t('common.greeting.afternoon'));
+    else setGreeting(t('common.greeting.evening'));
+  }, [t]);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -80,16 +83,19 @@ const Home = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         <div className="relative z-10 p-6 pt-12 text-white">
-          <div className="animate-slide-up">
-            <h1 className="text-2xl font-bold mb-2">
-              {greeting}, {farmerName}! 👨‍🌾
-            </h1>
-            <p className="text-white/90 text-lg">
-              Welcome to KrishiMitra AI
-            </p>
-            <p className="text-white/80 mt-1">
-              Your smart farming companion
-            </p>
+          <div className="flex justify-between items-start mb-4">
+            <div className="animate-slide-up">
+              <h1 className="text-2xl font-bold mb-2">
+                {greeting}, {farmerName}! {t('home.greeting')}
+              </h1>
+              <p className="text-white/90 text-lg">
+                {t('home.title')}
+              </p>
+              <p className="text-white/80 mt-1">
+                {t('home.subtitle')}
+              </p>
+            </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
@@ -122,7 +128,7 @@ const Home = () => {
       {/* Main Features */}
       <div className="px-6 mt-8">
         <h2 className="text-xl font-bold text-foreground mb-6">
-          What can I help you with today?
+          {t('home.features.title')}
         </h2>
         
         <div className="grid grid-cols-2 gap-4">
