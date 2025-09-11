@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useLanguage, LANGUAGES, Language } from "@/contexts/LanguageContext";
 import heroImage from "@/assets/farm-hero.jpg";
 import farmerPhone from "@/assets/farmer-phone.jpg";
 
@@ -14,13 +15,55 @@ interface OnboardingSlide {
 }
 
 const Onboarding = () => {
+  const { t, setLanguage } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showLanguageSelection, setShowLanguageSelection] = useState(true);
   const navigate = useNavigate();
+
+  if (showLanguageSelection) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-primary to-primary-glow flex items-center justify-center p-6">
+        <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm border-0 shadow-2xl animate-slide-up">
+          <div className="p-8 text-center">
+            <h1 className="text-2xl font-bold text-foreground mb-2">
+              {t('onboarding.welcome')}
+            </h1>
+            <p className="text-muted-foreground mb-8">
+              {t('onboarding.selectLanguage')}
+            </p>
+            
+            <div className="space-y-3 mb-8">
+              {Object.entries(LANGUAGES).map(([code, { native }]) => (
+                <Button
+                  key={code}
+                  variant="outline"
+                  className="w-full justify-start text-left h-12 text-lg hover:bg-primary/10 hover:border-primary"
+                  onClick={() => {
+                    setLanguage(code as Language);
+                    setShowLanguageSelection(false);
+                  }}
+                >
+                  {native}
+                </Button>
+              ))}
+            </div>
+            
+            <Button 
+              onClick={() => setShowLanguageSelection(false)}
+              className="w-full btn-hero"
+            >
+              {t('common.continue')}
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   const slides: OnboardingSlide[] = [
     {
-      title: "Welcome to KrishiMitra AI 🌾",
-      description: "Your smart farming companion powered by AI",
+      title: t('onboarding.welcome'),
+      description: t('onboarding.subtitle'),
       image: heroImage,
       features: [
         "Get instant farming advice in your language",

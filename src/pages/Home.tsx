@@ -17,45 +17,6 @@ import { BottomNavigation } from "@/components/ui/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-const featureCards = [
-  {
-    icon: Mic,
-    title: "Ask by Voice",
-    description: "Get instant farming advice in your language",
-    path: "/voice",
-    color: "text-accent",
-    bgColor: "bg-accent/10",
-    borderColor: "border-accent/30"
-  },
-  {
-    icon: Camera,
-    title: "Scan & Detect",
-    description: "Identify pests and diseases instantly",
-    path: "/camera",
-    color: "text-golden",
-    bgColor: "bg-golden/10",
-    borderColor: "border-golden/30"
-  },
-  {
-    icon: Cloud,
-    title: "Weather Alerts",
-    description: "Get weather updates and farming tips",
-    path: "/weather",
-    color: "text-accent",
-    bgColor: "bg-accent/10",
-    borderColor: "border-accent/30"
-  },
-  {
-    icon: TrendingUp,
-    title: "Market Prices",
-    description: "Track crop prices and find best deals",
-    path: "/market",
-    color: "text-primary",
-    bgColor: "bg-primary/10",
-    borderColor: "border-primary/30"
-  }
-];
-
 const Home = () => {
   const { t } = useLanguage();
   const [farmerName] = useState("Ravi");
@@ -66,6 +27,45 @@ const Home = () => {
     wind: "12 km/h",
     condition: t('home.weather.condition')
   });
+
+  const featureCards = [
+    {
+      icon: Mic,
+      title: t('home.features.voice.title'),
+      description: t('home.features.voice.description'),
+      path: "/voice",
+      color: "text-accent",
+      bgColor: "bg-accent/10",
+      borderColor: "border-accent/30"
+    },
+    {
+      icon: Camera,
+      title: t('home.features.camera.title'),
+      description: t('home.features.camera.description'),
+      path: "/camera",
+      color: "text-golden",
+      bgColor: "bg-golden/10",
+      borderColor: "border-golden/30"
+    },
+    {
+      icon: Cloud,
+      title: t('home.features.weather.title'),
+      description: t('home.features.weather.description'),
+      path: "/weather",
+      color: "text-accent",
+      bgColor: "bg-accent/10",
+      borderColor: "border-accent/30"
+    },
+    {
+      icon: TrendingUp,
+      title: t('home.features.market.title'),
+      description: t('home.features.market.description'),
+      path: "/market",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
+      borderColor: "border-primary/30"
+    }
+  ];
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -169,15 +169,15 @@ const Home = () => {
           <div className="flex items-center gap-3 mb-4">
             <MapPin className="text-primary" size={20} />
             <div>
-              <p className="font-semibold">Your Farm Location</p>
-              <p className="text-sm text-muted-foreground">Punjab, India</p>
+              <p className="font-semibold">{t('home.location.title')}</p>
+              <p className="text-sm text-muted-foreground">{t('home.location.location')}</p>
             </div>
           </div>
           
           <div className="bg-primary/5 rounded-xl p-4 border border-primary/20">
-            <h4 className="font-semibold text-primary mb-2">💡 Today's Tip</h4>
+            <h4 className="font-semibold text-primary mb-2">{t('home.tip.title')}</h4>
             <p className="text-sm text-foreground">
-              Perfect weather for irrigation! Consider watering your crops early morning for best results.
+              {t('home.tip.content')}
             </p>
           </div>
         </Card>

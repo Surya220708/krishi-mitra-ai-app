@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 import farmerPhone from "@/assets/farmer-phone.jpg";
 
 interface DetectionResult {
@@ -15,6 +16,7 @@ interface DetectionResult {
 }
 
 const Camera = () => {
+  const { t } = useLanguage();
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [showCamera, setShowCamera] = useState(false);
@@ -126,9 +128,9 @@ const Camera = () => {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="bg-gradient-to-r from-golden to-golden/80 text-golden-foreground p-6 pt-12">
-        <h1 className="text-2xl font-bold mb-2 animate-fade-in">Pest & Disease Scanner</h1>
+        <h1 className="text-2xl font-bold mb-2 animate-fade-in">{t('camera.title')}</h1>
         <p className="text-golden-foreground/90">
-          Take a photo or upload image of affected crop
+          {t('camera.subtitle')}
         </p>
       </div>
 

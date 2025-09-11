@@ -3,6 +3,7 @@ import { Mic, MicOff, Volume2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ChatMessage {
   id: string;
@@ -12,11 +13,12 @@ interface ChatMessage {
 }
 
 const Voice = () => {
+  const { t } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "1",
-      text: "Namaste! I'm your KrishiMitra AI assistant. How can I help you with your farming today?",
+      text: t('voice.welcome'),
       isUser: false,
       timestamp: new Date()
     }
@@ -64,9 +66,9 @@ const Voice = () => {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="bg-primary text-primary-foreground p-6 pt-12">
-        <h1 className="text-2xl font-bold mb-2 animate-fade-in">Voice Advisory</h1>
+        <h1 className="text-2xl font-bold mb-2 animate-fade-in">{t('voice.title')}</h1>
         <p className="text-primary-foreground/90">
-          Speak in Hindi, English, or Punjabi
+          {t('voice.subtitle')}
         </p>
       </div>
 
@@ -151,10 +153,10 @@ const Voice = () => {
             
             <div className="text-center">
               <p className="font-semibold text-foreground">
-                {isListening ? "Listening..." : "Tap to speak"}
+                {isListening ? t('voice.listening') : t('voice.tapToSpeak')}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                {isListening ? "Say your farming question" : "Ask anything about farming"}
+                {isListening ? t('voice.sayQuestion') : t('voice.askAnything')}
               </p>
             </div>
           </div>

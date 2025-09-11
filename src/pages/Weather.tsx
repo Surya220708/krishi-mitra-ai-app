@@ -13,6 +13,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface WeatherData {
   current: {
@@ -38,6 +39,7 @@ interface WeatherData {
 }
 
 const Weather = () => {
+  const { t } = useLanguage();
   const [weather] = useState<WeatherData>({
     current: {
       temp: 28,
@@ -82,10 +84,10 @@ const Weather = () => {
       {/* Header */}
       <div className="gradient-sky text-white p-6 pt-12">
         <div className="animate-fade-in">
-          <h1 className="text-2xl font-bold mb-2">Weather & Alerts</h1>
+          <h1 className="text-2xl font-bold mb-2">{t('weather.title')}</h1>
           <div className="flex items-center gap-2 text-white/90">
             <MapPin size={16} />
-            <span>Punjab, India</span>
+            <span>{t('home.location.location')}</span>
           </div>
         </div>
       </div>

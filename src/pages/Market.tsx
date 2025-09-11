@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CropPrice {
   name: string;
@@ -16,6 +17,7 @@ interface CropPrice {
 }
 
 const Market = () => {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   
@@ -102,10 +104,10 @@ const Market = () => {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-glow text-primary-foreground p-6 pt-12">
-        <h1 className="text-2xl font-bold mb-2 animate-fade-in">Market Prices</h1>
+        <h1 className="text-2xl font-bold mb-2 animate-fade-in">{t('market.title')}</h1>
         <div className="flex items-center gap-2 text-primary-foreground/90">
           <Calendar size={16} />
-          <span>Updated: Today, 2:30 PM</span>
+          <span>{t('market.subtitle')}</span>
         </div>
       </div>
 

@@ -1,18 +1,21 @@
 import { Home, Mic, Camera, Cloud, TrendingUp, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const navItems = [
-  { icon: Home, label: "Home", path: "/" },
-  { icon: Mic, label: "Voice", path: "/voice" },
-  { icon: Camera, label: "Scan", path: "/camera" },
-  { icon: Cloud, label: "Weather", path: "/weather" },
-  { icon: TrendingUp, label: "Market", path: "/market" },
-  { icon: User, label: "Profile", path: "/profile" },
-];
 
 export const BottomNavigation = () => {
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { icon: Home, label: t('navigation.home'), path: "/" },
+    { icon: Mic, label: t('navigation.voice'), path: "/voice" },
+    { icon: Camera, label: t('navigation.scan'), path: "/camera" },
+    { icon: Cloud, label: t('navigation.weather'), path: "/weather" },
+    { icon: TrendingUp, label: t('navigation.market'), path: "/market" },
+    { icon: User, label: t('navigation.profile'), path: "/profile" },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-lg">

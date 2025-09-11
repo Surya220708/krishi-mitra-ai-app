@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { BottomNavigation } from "@/components/ui/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface UserProfile {
   name: string;
@@ -44,6 +45,7 @@ interface UserProfile {
 }
 
 const Profile = () => {
+  const { t } = useLanguage();
   const [user] = useState<UserProfile>({
     name: "Ravi Kumar",
     phone: "+91 98765 43210",
@@ -97,8 +99,8 @@ const Profile = () => {
       {/* Header */}
       <div className="gradient-earth text-white p-6 pt-12">
         <div className="animate-fade-in">
-          <h1 className="text-2xl font-bold mb-2">My Profile</h1>
-          <p className="text-white/90">Track your farming journey</p>
+          <h1 className="text-2xl font-bold mb-2">{t('profile.title')}</h1>
+          <p className="text-white/90">{t('profile.subtitle')}</p>
         </div>
       </div>
 
