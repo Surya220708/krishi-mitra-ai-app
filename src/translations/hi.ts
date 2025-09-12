@@ -121,6 +121,41 @@ export default {
     getStarted: "शुरू करें"
   },
 
+  calendar: {
+    title: "AI फसल कैलेंडर",
+    subtitle: "स्मार्ट खेती रिमाइंडर और शेड्यूलिंग",
+    todaysReminders: "आज के रिमाइंडर",
+    upcomingTasks: "आने वाले कार्य",
+    cropSchedule: "फसल शेड्यूल",
+    addCrop: "नई फसल जोड़ें",
+    weatherAlert: "मौसम अलर्ट",
+    noReminders: "आज के लिए कोई रिमाइंडर नहीं",
+    irrigation: "सिंचाई",
+    sowing: "बुआई",
+    harvesting: "कटाई",
+    fertilizing: "उर्वरक",
+    pestControl: "कीट नियंत्रण",
+    urgent: "तत्काल",
+    high: "उच्च प्राथमिकता",
+    medium: "मध्यम प्राथमिकता",
+    low: "कम प्राथमिकता",
+    markComplete: "पूर्ण का निशान लगाएं",
+    snooze: "स्नूज़",
+    details: "विवरण देखें",
+    weatherBased: "मौसम आधारित सिफारिश",
+    dueSoon: "बकाया",
+    overdue: "समय सीमा समाप्त",
+    completed: "पूर्ण",
+    days: "दिन",
+    hours: "घंटे",
+    addReminder: "रिमाइंडर जोड़ें",
+    selectCrop: "फसल चुनें",
+    selectTask: "कार्य प्रकार चुनें",
+    setDate: "दिनांक और समय सेट करें",
+    taskAdded: "कार्य सफलतापूर्वक जोड़ा गया",
+    taskCompleted: "कार्य पूर्ण के रूप में चिह्नित"
+  },
+
   language: {
     title: "भाषा चुनें",
     subtitle: "अपनी पसंदीदा भाषा चुनें"

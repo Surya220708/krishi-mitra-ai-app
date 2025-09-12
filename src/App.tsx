@@ -9,6 +9,7 @@ import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import Voice from "./pages/Voice";
 import Camera from "./pages/Camera";
+import Calendar from "./pages/Calendar";
 import Weather from "./pages/Weather";
 import Market from "./pages/Market";
 import Profile from "./pages/Profile";
@@ -33,6 +34,7 @@ const AppRouter = () => {
       <Route path="/" element={<Home />} />
       <Route path="/voice" element={<Voice />} />
       <Route path="/camera" element={<Camera />} />
+      <Route path="/calendar" element={<Calendar />} />
       <Route path="/weather" element={<Weather />} />
       <Route path="/market" element={<Market />} />
       <Route path="/profile" element={<Profile />} />
