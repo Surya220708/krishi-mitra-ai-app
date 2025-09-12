@@ -110,6 +110,7 @@ export default {
     voice: "Voice", 
     scan: "Scan",
     calendar: "Calendar",
+    sustainability: "Sustainability",
     weather: "Weather",
     market: "Market",
     profile: "Profile"
@@ -154,7 +155,64 @@ export default {
     selectTask: "Select Task Type",
     setDate: "Set Date & Time",
     taskAdded: "Task added successfully",
-    taskCompleted: "Task marked as completed"
+    taskCompleted: "Task marked as completed",
+    cropPlaceholder: "e.g., Wheat, Rice, Corn",
+    taskTitle: "Title",
+    taskTitlePlaceholder: "Task title",
+    description: "Description",
+    descriptionPlaceholder: "Task description",
+    priority: "Priority"
+  },
+
+  sustainability: {
+    title: "Sustainability Score",
+    subtitle: "Track your eco-friendly farming practices",
+    greenScore: "Green Score",
+    nextLevel: "Next Level",
+    pointsToGo: "points to go",
+    weeklyProgress: "Weekly Progress",
+    thisWeek: "this week",
+    pointsToWeeklyGoal: "points to weekly goal",
+    quickActions: "Log Eco-Practices",
+    practiceAdded: "Practice Added!",
+    points: "points",
+    unlocked: "Unlocked",
+    verified: "Verified",
+    recentActivities: "Recent Activities",
+    levels: {
+      beginner: "Eco Beginner",
+      ecoLearner: "Eco Learner", 
+      greenFarmer: "Green Farmer",
+      ecoChampion: "Eco Champion",
+      ecoMaster: "Eco Master"
+    },
+    actions: {
+      waterSaving: "Water Conservation",
+      organicPractice: "Organic Practice",
+      bioPestControl: "Bio Pest Control",
+      energySaving: "Energy Saving"
+    },
+    practices: {
+      dripIrrigation: "Used drip irrigation system",
+      organicFertilizer: "Applied organic fertilizer",
+      biologicalPestControl: "Used biological pest control",
+      solarPumps: "Used solar-powered equipment"
+    },
+    achievements: {
+      title: "Achievements",
+      waterSaver: {
+        title: "Water Saver",
+        description: "Saved 1000L water using efficient irrigation"
+      },
+      organicFarmer: {
+        title: "Organic Farmer", 
+        description: "Used organic methods for 5 consecutive seasons"
+      },
+      ecoWarrior: {
+        title: "Eco Warrior",
+        description: "Achieved 20 sustainable practices"
+      }
+    }
   },
 
   language: {

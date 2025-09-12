@@ -375,30 +375,30 @@ const AddTaskForm = ({ onSubmit, t }: { onSubmit: (data: Partial<CropTask>) => v
         <Input 
           value={formData.cropName}
           onChange={(e) => setFormData(prev => ({ ...prev, cropName: e.target.value }))}
-          placeholder="e.g., Wheat, Rice, Corn"
+          placeholder={t('calendar.cropPlaceholder')}
         />
       </div>
 
       <div>
-        <Label>Title</Label>
+        <Label>{t('calendar.taskTitle')}</Label>
         <Input 
           value={formData.title}
           onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-          placeholder="Task title"
+          placeholder={t('calendar.taskTitlePlaceholder')}
         />
       </div>
 
       <div>
-        <Label>Description</Label>
+        <Label>{t('calendar.description')}</Label>
         <Textarea 
           value={formData.description}
           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-          placeholder="Task description"
+          placeholder={t('calendar.descriptionPlaceholder')}
         />
       </div>
 
       <div>
-        <Label>Priority</Label>
+        <Label>{t('calendar.priority')}</Label>
         <Select value={formData.priority} onValueChange={(value: any) => setFormData(prev => ({ ...prev, priority: value }))}>
           <SelectTrigger>
             <SelectValue />

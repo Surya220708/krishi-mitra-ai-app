@@ -109,6 +109,8 @@ export default {
     home: "होम",
     voice: "आवाज",
     scan: "स्कैन",
+    calendar: "कैलेंडर",
+    sustainability: "स्थिरता",
     weather: "मौसम",
     market: "मार्केट",
     profile: "प्रोफाइल"
@@ -122,16 +124,16 @@ export default {
   },
 
   calendar: {
-    title: "AI फसल कैलेंडर",
+    title: "एआई फसल कैलेंडर",
     subtitle: "स्मार्ट खेती रिमाइंडर और शेड्यूलिंग",
     todaysReminders: "आज के रिमाइंडर",
-    upcomingTasks: "आने वाले कार्य",
-    cropSchedule: "फसल शेड्यूल",
+    upcomingTasks: "आगामी कार्य",
+    cropSchedule: "फसल कार्यक्रम",
     addCrop: "नई फसल जोड़ें",
-    weatherAlert: "मौसम अलर्ट",
+    weatherAlert: "मौसम चेतावनी",
     noReminders: "आज के लिए कोई रिमाइंडर नहीं",
     irrigation: "सिंचाई",
-    sowing: "बुआई",
+    sowing: "बुवाई",
     harvesting: "कटाई",
     fertilizing: "उर्वरक",
     pestControl: "कीट नियंत्रण",
@@ -139,21 +141,78 @@ export default {
     high: "उच्च प्राथमिकता",
     medium: "मध्यम प्राथमिकता",
     low: "कम प्राथमिकता",
-    markComplete: "पूर्ण का निशान लगाएं",
+    markComplete: "पूर्ण चिह्नित करें",
     snooze: "स्नूज़",
     details: "विवरण देखें",
     weatherBased: "मौसम आधारित सिफारिश",
-    dueSoon: "बकाया",
-    overdue: "समय सीमा समाप्त",
+    dueSoon: "में देय",
+    overdue: "देर से",
     completed: "पूर्ण",
     days: "दिन",
     hours: "घंटे",
     addReminder: "रिमाइंडर जोड़ें",
     selectCrop: "फसल चुनें",
     selectTask: "कार्य प्रकार चुनें",
-    setDate: "दिनांक और समय सेट करें",
+    setDate: "दिनांक और समय निर्धारित करें",
     taskAdded: "कार्य सफलतापूर्वक जोड़ा गया",
-    taskCompleted: "कार्य पूर्ण के रूप में चिह्नित"
+    taskCompleted: "कार्य पूर्ण के रूप में चिह्नित",
+    cropPlaceholder: "जैसे गेहूं, धान, मक्का",
+    taskTitle: "शीर्षक",
+    taskTitlePlaceholder: "कार्य शीर्षक",
+    description: "विवरण",
+    descriptionPlaceholder: "कार्य विवरण",
+    priority: "प्राथमिकता"
+  },
+
+  sustainability: {
+    title: "स्थिरता स्कोर",
+    subtitle: "अपनी पर्यावरण-अनुकूल खेती प्रथाओं को ट्रैक करें",
+    greenScore: "ग्रीन स्कोर",
+    nextLevel: "अगला स्तर",
+    pointsToGo: "अंक बाकी",
+    weeklyProgress: "साप्ताहिक प्रगति",
+    thisWeek: "इस सप्ताह",
+    pointsToWeeklyGoal: "साप्ताहिक लक्ष्य के लिए अंक",
+    quickActions: "इको-प्रैक्टिस लॉग करें",
+    practiceAdded: "प्रैक्टिस जोड़ी गई!",
+    points: "अंक",
+    unlocked: "अनलॉक",
+    verified: "सत्यापित",
+    recentActivities: "हाल की गतिविधियां",
+    levels: {
+      beginner: "इको शुरुआती",
+      ecoLearner: "इको सीखने वाला",
+      greenFarmer: "हरित किसान", 
+      ecoChampion: "इको चैंपियन",
+      ecoMaster: "इको मास्टर"
+    },
+    actions: {
+      waterSaving: "जल संरक्षण",
+      organicPractice: "जैविक प्रैक्टिस",
+      bioPestControl: "जैविक कीट नियंत्रण",
+      energySaving: "ऊर्जा बचत"
+    },
+    practices: {
+      dripIrrigation: "ड्रिप सिंचाई प्रणाली का उपयोग",
+      organicFertilizer: "जैविक उर्वरक लगाया",
+      biologicalPestControl: "जैविक कीट नियंत्रण का उपयोग",
+      solarPumps: "सौर ऊर्जा उपकरण का उपयोग"
+    },
+    achievements: {
+      title: "उपलब्धियां",
+      waterSaver: {
+        title: "जल रक्षक",
+        description: "कुशल सिंचाई से 1000L पानी बचाया"
+      },
+      organicFarmer: {
+        title: "जैविक किसान",
+        description: "लगातार 5 सीज़न जैविक तरीके अपनाए"
+      },
+      ecoWarrior: {
+        title: "पर्यावरण योद्धा",
+        description: "20 स्थायी प्रथाएं हासिल कीं"
+      }
+    }
   },
 
   language: {

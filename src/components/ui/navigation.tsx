@@ -1,4 +1,4 @@
-import { Home, Mic, Camera, Calendar, Cloud, TrendingUp, User } from "lucide-react";
+import { Home, Mic, Camera, Calendar, Cloud, TrendingUp, User, Leaf } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,9 +13,7 @@ export const BottomNavigation = () => {
     { icon: Mic, label: t('navigation.voice'), path: "/voice" },
     { icon: Camera, label: t('navigation.scan'), path: "/camera" },
     { icon: Calendar, label: t('navigation.calendar'), path: "/calendar" },
-    { icon: Cloud, label: t('navigation.weather'), path: "/weather" },
-    { icon: TrendingUp, label: t('navigation.market'), path: "/market" },
-    { icon: User, label: t('navigation.profile'), path: "/profile" },
+    { icon: Leaf, label: t('navigation.sustainability'), path: "/sustainability" },
   ];
 
   return (
