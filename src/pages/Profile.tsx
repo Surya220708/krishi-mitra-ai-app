@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { BottomNavigation } from "@/components/ui/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useLocation } from "@/contexts/LocationContext";
 
 interface UserProfile {
   name: string;
@@ -46,10 +47,11 @@ interface UserProfile {
 
 const Profile = () => {
   const { t } = useLanguage();
+  const { regionalData } = useLocation();
   const [user] = useState<UserProfile>({
     name: "Ravi Kumar",
     phone: "+91 98765 43210",
-    location: "Village Khanna, Punjab",
+    location: `Village ${regionalData.marketCenters[0]}, ${regionalData.name}`,
     farmSize: "5 acres",
     joinDate: "January 2024",
     level: 3,

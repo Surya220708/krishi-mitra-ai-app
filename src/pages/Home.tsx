@@ -15,10 +15,13 @@ import { Card } from "@/components/ui/card";
 import heroImage from "@/assets/farm-hero.jpg";
 import { BottomNavigation } from "@/components/ui/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useLocation } from "@/contexts/LocationContext";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { LocationSelector } from "@/components/LocationSelector";
 
 const Home = () => {
   const { t } = useLanguage();
+  const { regionalData } = useLocation();
   const [farmerName] = useState("Ravi");
   const [greeting, setGreeting] = useState("");
   const [currentWeather] = useState({
@@ -95,7 +98,10 @@ const Home = () => {
                 {t('home.subtitle')}
               </p>
             </div>
-            <LanguageSwitcher />
+            <div className="flex gap-2">
+              <LocationSelector />
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>
@@ -170,15 +176,19 @@ const Home = () => {
             <MapPin className="text-primary" size={20} />
             <div>
               <p className="font-semibold">{t('home.location.title')}</p>
-              <p className="text-sm text-muted-foreground">{t('home.location.location')}</p>
+              <p className="text-sm text-muted-foreground">{regionalData.name}, India</p>
             </div>
           </div>
           
           <div className="bg-primary/5 rounded-xl p-4 border border-primary/20">
             <h4 className="font-semibold text-primary mb-2">{t('home.tip.title')}</h4>
             <p className="text-sm text-foreground">
-              {t('home.tip.content')}
+              {regionalData.tips[0]}
             </p>
+            <div className="mt-3 text-xs text-muted-foreground">
+              <p><strong>Major Crops:</strong> {regionalData.majorCrops.slice(0, 4).join(', ')}</p>
+              <p><strong>Rainfall:</strong> {regionalData.avgRainfall} | <strong>Temperature:</strong> {regionalData.temperature.min} to {regionalData.temperature.max}</p>
+            </div>
           </div>
         </Card>
       </div>

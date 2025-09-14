@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BottomNavigation } from "@/components/ui/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useLocation } from "@/contexts/LocationContext";
 
 interface WeatherData {
   current: {
@@ -40,6 +41,7 @@ interface WeatherData {
 
 const Weather = () => {
   const { t } = useLanguage();
+  const { regionalData } = useLocation();
   const [weather] = useState<WeatherData>({
     current: {
       temp: 28,
@@ -87,7 +89,7 @@ const Weather = () => {
           <h1 className="text-2xl font-bold mb-2">{t('weather.title')}</h1>
           <div className="flex items-center gap-2 text-white/90">
             <MapPin size={16} />
-            <span>{t('home.location.location')}</span>
+            <span>{regionalData.name}, India</span>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { LocationProvider } from "./contexts/LocationContext";
 import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import Voice from "./pages/Voice";
@@ -48,13 +49,15 @@ const AppRouter = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
-      </TooltipProvider>
+      <LocationProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppRouter />
+          </BrowserRouter>
+        </TooltipProvider>
+      </LocationProvider>
     </LanguageProvider>
   </QueryClientProvider>
 );
