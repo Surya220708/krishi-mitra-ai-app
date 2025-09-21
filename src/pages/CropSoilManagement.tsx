@@ -11,7 +11,15 @@ import {
   RotateCcw,
   Calendar,
   Zap,
-  Camera
+  Camera,
+  X,
+  Play,
+  Pause,
+  TrendingDown,
+  Minus,
+  ArrowUp,
+  ArrowDown,
+  BarChart3
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,16 +28,8 @@ import { Progress } from "@/components/ui/progress";
 import { BottomNavigation } from "@/components/ui/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLocation } from "@/contexts/LocationContext";
-
-interface SoilData {
-  moisture: number;
-  ph: number;
-  nitrogen: number;
-  phosphorus: number;
-  potassium: number;
-  temperature: number;
-  lastUpdated: Date;
-}
+import { useSoilMonitoring } from "@/hooks/useSoilMonitoring";
+import { useNavigate } from "react-router-dom";
 
 interface CropRecommendation {
   crop: string;
@@ -48,43 +48,103 @@ interface IrrigationSchedule {
 const CropSoilManagement = () => {
   const { t, language } = useLanguage();
   const { regionalData } = useLocation();
-  const [soilData] = useState<SoilData>({
-    moisture: 65,
-    ph: 6.8,
-    nitrogen: 78,
-    phosphorus: 45,
-    potassium: 82,
-    temperature: 24,
-    lastUpdated: new Date()
-  });
+  const navigate = useNavigate();
+  const {
+    soilData,
+    soilHistory,
+    alerts,
+    irrigationHistory,
+    isActive,
+    irrigateNow,
+    scheduleIrrigation,
+    toggleMonitoring,
+    dismissAlert,
+    getSoilHealthScore
+  } = useSoilMonitoring();
 
-  const [recommendations] = useState<CropRecommendation[]>([
-    {
-      crop: "Wheat",
-      suitability: "Excellent", 
-      expectedYield: "4.5 tons/hectare",
-      reason: "Ideal soil conditions with optimal pH and nutrient levels"
-    },
-    {
-      crop: "Rice",
-      suitability: "Good",
-      expectedYield: "6.2 tons/hectare", 
-      reason: "High moisture content suitable, needs phosphorus supplement"
-    },
-    {
-      crop: "Corn",
-      suitability: "Fair",
-      expectedYield: "3.8 tons/hectare",
-      reason: "Requires nitrogen boost for optimal growth"
+  const [showAlerts, setShowAlerts] = useState(true);
+  const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
+  const [isIrrigating, setIsIrrigating] = useState(false);
+  
+  const healthScore = getSoilHealthScore();
+
+  // Dynamic crop recommendations based on real soil data
+  const getRecommendations = (): CropRecommendation[] => {
+    const recs: CropRecommendation[] = [];
+    
+    if (soilData.moisture >= 60 && soilData.nitrogen >= 70 && soilData.ph >= 6.0 && soilData.ph <= 7.0) {
+      recs.push({
+        crop: regionalData.name === 'Punjab' ? 'Wheat' : 'Cotton',
+        suitability: "Excellent",
+        expectedYield: regionalData.name === 'Punjab' ? "4.8 tons/hectare" : "2.2 tons/hectare",
+        reason: "Optimal soil conditions with excellent moisture, pH, and nutrients"
+      });
     }
-  ]);
+    
+    if (soilData.moisture >= 70) {
+      recs.push({
+        crop: 'Rice',
+        suitability: soilData.phosphorus >= 50 ? "Excellent" : "Good",
+        expectedYield: "6.5 tons/hectare",
+        reason: soilData.phosphorus >= 50 ? "Perfect moisture and nutrients" : "High moisture, needs phosphorus boost"
+      });
+    }
+    
+    if (soilData.nitrogen < 60) {
+      recs.push({
+        crop: 'Legumes (Peas)',
+        suitability: "Good",
+        expectedYield: "2.8 tons/hectare",
+        reason: "Will naturally fix nitrogen in soil while producing yield"
+      });
+    }
+    
+    return recs.length > 0 ? recs : [{
+      crop: 'Corn',
+      suitability: "Fair",
+      expectedYield: "3.5 tons/hectare",
+      reason: "Requires soil improvement for optimal growth"
+    }];
+  };
+
+  const [recommendations, setRecommendations] = useState<CropRecommendation[]>(getRecommendations());
+
+  // Update recommendations when soil data changes
+  useEffect(() => {
+    setRecommendations(getRecommendations());
+  }, [soilData, regionalData]);
 
   const [irrigationSchedule] = useState<IrrigationSchedule>({
     nextIrrigation: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
     duration: 45,
-    reason: "Soil moisture at 65%, next irrigation in 2 days based on weather forecast",
+    reason: `Soil moisture at ${soilData.moisture}%, next irrigation based on AI prediction`,
     waterAmount: 25
   });
+
+  const handleIrrigateNow = async () => {
+    setIsIrrigating(true);
+    await irrigateNow(30, 22);
+    setTimeout(() => setIsIrrigating(false), 3000);
+  };
+
+  const handleScheduleIrrigation = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(6, 0, 0); // 6 AM tomorrow
+    scheduleIrrigation(tomorrow, 45, 25);
+  };
+
+  const handleScanCrop = () => {
+    navigate('/camera');
+  };
+
+  const getTrendIcon = (trend: string) => {
+    switch (trend) {
+      case 'up': return <ArrowUp size={14} className="text-green-600" />;
+      case 'down': return <ArrowDown size={14} className="text-red-600" />;
+      default: return <Minus size={14} className="text-gray-600" />;
+    }
+  };
 
   const getSuitabilityColor = (suitability: string) => {
     switch (suitability) {
@@ -116,33 +176,124 @@ const CropSoilManagement = () => {
       </div>
 
       <div className="px-6 py-6 space-y-6">
-        {/* Real-time Soil Monitoring */}
+        {/* Real-time Alerts */}
+        {showAlerts && alerts.length > 0 && (
+          <div className="space-y-2 -mt-8 relative z-20 animate-slide-up">
+            {alerts.slice(0, 3).map((alert) => (
+              <Card key={alert.id} className={`p-3 border-l-4 ${
+                alert.type === 'warning' ? 'border-l-yellow-500 bg-yellow-50' :
+                alert.type === 'error' ? 'border-l-red-500 bg-red-50' :
+                'border-l-blue-500 bg-blue-50'
+              }`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle size={16} className={
+                      alert.type === 'warning' ? 'text-yellow-600' :
+                      alert.type === 'error' ? 'text-red-600' : 'text-blue-600'
+                    } />
+                    <div>
+                      <p className="text-sm font-medium">{alert.message}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {alert.timestamp.toLocaleTimeString()}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => dismissAlert(alert.id)}
+                    className="h-6 w-6 p-0"
+                  >
+                    <X size={12} />
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Soil Health Score */}
         <Card className="card-farm -mt-8 relative z-10 animate-slide-up">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold flex items-center gap-2">
+              <BarChart3 className="text-primary" size={20} />
+              Soil Health Score
+            </h2>
+            <div className="flex items-center gap-2">
+              <Badge className={`${healthScore.overall >= 80 ? 'bg-green-100 text-green-800' :
+                healthScore.overall >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                'bg-red-100 text-red-800'
+              }`}>
+                {healthScore.overall}%
+              </Badge>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="flex justify-between">
+              <span>Moisture:</span>
+              <span className="font-medium">{healthScore.moisture}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>pH Balance:</span>
+              <span className="font-medium">{healthScore.ph}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Nitrogen:</span>
+              <span className="font-medium">{healthScore.nitrogen}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Phosphorus:</span>
+              <span className="font-medium">{healthScore.phosphorus}%</span>
+            </div>
+          </div>
+          
+          <Progress value={healthScore.overall} className="mt-3 h-3" />
+        </Card>
+
+        {/* Real-time Soil Monitoring */}
+        <Card className="card-farm animate-slide-up">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold flex items-center gap-2">
               <Activity className="text-primary" size={24} />
               {t('cropSoil.soilMonitoring.title')}
             </h2>
-            <Badge className="bg-green-100 text-green-800">
-              {t('cropSoil.soilMonitoring.live')}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge className={isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
+                {isActive ? t('cropSoil.soilMonitoring.live') : 'Paused'}
+              </Badge>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleMonitoring}
+                className="h-8 w-8 p-0"
+              >
+                {isActive ? <Pause size={14} /> : <Play size={14} />}
+              </Button>
+            </div>
           </div>
 
           {/* Key Metrics Grid */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-accent/10 border border-accent/20 rounded-xl p-4 text-center">
+            <div className="bg-accent/10 border border-accent/20 rounded-xl p-4 text-center relative">
+              <div className="absolute top-2 right-2">
+                {getTrendIcon(soilData.trend)}
+              </div>
               <Droplets className="text-accent mx-auto mb-2" size={24} />
               <p className="text-sm text-muted-foreground">{t('cropSoil.soilMonitoring.moisture')}</p>
-              <p className="font-bold text-xl">{soilData.moisture}%</p>
+              <p className="font-bold text-xl">{soilData.moisture.toFixed(1)}%</p>
               <Progress value={soilData.moisture} className="mt-2 h-2" />
             </div>
             
             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 text-center">
               <Thermometer className="text-primary mx-auto mb-2" size={24} />
               <p className="text-sm text-muted-foreground">{t('cropSoil.soilMonitoring.temperature')}</p>
-              <p className="font-bold text-xl">{soilData.temperature}°C</p>
+              <p className="font-bold text-xl">{soilData.temperature.toFixed(1)}°C</p>
               <div className="text-xs text-muted-foreground mt-1">
-                {t('cropSoil.soilMonitoring.optimal')}
+                {soilData.temperature >= 20 && soilData.temperature <= 28 ? 
+                  t('cropSoil.soilMonitoring.optimal') : 
+                  soilData.temperature < 20 ? 'Cool' : 'Hot'
+                }
               </div>
             </div>
           </div>
@@ -165,8 +316,8 @@ const CropSoilManagement = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <Progress value={nutrient.value} className="w-20 h-2" />
-                    <span className="font-bold min-w-[3rem]">{nutrient.value}%</span>
-                    <Badge className={`${status.color} text-xs`}>
+                    <span className="font-bold min-w-[3rem]">{nutrient.value.toFixed(0)}%</span>
+                    <Badge className={`${status.color} text-xs min-w-[60px] text-center`}>
                       {status.status}
                     </Badge>
                   </div>
@@ -179,8 +330,15 @@ const CropSoilManagement = () => {
             <div className="flex items-center gap-2">
               <CheckCircle className="text-golden" size={16} />
               <span className="text-sm font-medium text-golden-foreground">
-                pH Level: {soilData.ph} - {t('cropSoil.soilMonitoring.phStatus')}
+                pH Level: {soilData.ph.toFixed(1)} - {
+                  soilData.ph >= 6.0 && soilData.ph <= 7.5 ? 
+                    t('cropSoil.soilMonitoring.phStatus') : 
+                    soilData.ph < 6.0 ? 'Acidic - Needs Lime' : 'Alkaline - Needs Sulfur'
+                }
               </span>
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              Last updated: {soilData.lastUpdated.toLocaleTimeString()}
             </div>
           </div>
         </Card>
@@ -304,19 +462,50 @@ const CropSoilManagement = () => {
             <div className="grid grid-cols-2 gap-3">
               <Button 
                 variant="outline" 
-                className="h-12 border-2 border-primary text-primary hover:bg-primary/10"
+                className={`h-12 border-2 transition-all ${
+                  isIrrigating 
+                    ? 'border-green-500 bg-green-50 text-green-700' 
+                    : 'border-primary text-primary hover:bg-primary/10'
+                }`}
+                onClick={handleIrrigateNow}
+                disabled={isIrrigating}
               >
-                <Droplets size={16} className="mr-2" />
-                {t('cropSoil.irrigation.irrigateNow')}
+                {isIrrigating ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-green-600 border-t-transparent mr-2" />
+                    Irrigating...
+                  </>
+                ) : (
+                  <>
+                    <Droplets size={16} className="mr-2" />
+                    {t('cropSoil.irrigation.irrigateNow')}
+                  </>
+                )}
               </Button>
               <Button 
                 variant="outline"
                 className="h-12 border-2 border-accent text-accent hover:bg-accent/10"
+                onClick={handleScheduleIrrigation}
               >
                 <Calendar size={16} className="mr-2" />
                 {t('cropSoil.irrigation.schedule')}
               </Button>
             </div>
+            
+            {/* Irrigation History */}
+            {irrigationHistory.length > 0 && (
+              <div className="mt-4 p-3 bg-accent/5 rounded-lg">
+                <h5 className="text-sm font-medium mb-2">Recent Irrigation</h5>
+                <div className="space-y-1">
+                  {irrigationHistory.slice(-3).reverse().map((event) => (
+                    <div key={event.id} className="flex justify-between text-xs text-muted-foreground">
+                      <span>{event.timestamp.toLocaleDateString()} - {event.type}</span>
+                      <span>{event.amount}L/m² • {event.duration}min</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </Card>
 
@@ -338,7 +527,10 @@ const CropSoilManagement = () => {
               {t('cropSoil.diseaseDetection.description')}
             </p>
             
-            <Button className="w-full btn-golden">
+            <Button 
+              className="w-full btn-golden"
+              onClick={handleScanCrop}
+            >
               <Camera size={16} className="mr-2" />
               {t('cropSoil.diseaseDetection.scanNow')}
             </Button>
