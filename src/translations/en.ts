@@ -109,6 +109,7 @@ export default {
     home: "Home",
     voice: "Voice", 
     scan: "Scan",
+    cropSoil: "Crop & Soil",
     calendar: "Calendar",
     sustainability: "Sustainability",
     weather: "Weather",
@@ -218,5 +219,50 @@ export default {
   language: {
     title: "Select Language",
     subtitle: "Choose your preferred language"
+  },
+
+  cropSoil: {
+    title: "Crop & Soil Management",
+    subtitle: "AI-driven soil health monitoring and crop management",
+    soilMonitoring: {
+      title: "Real-time Soil Monitoring",
+      live: "Live",
+      moisture: "Soil Moisture",
+      temperature: "Soil Temperature", 
+      optimal: "Optimal",
+      nutrients: "Nutrient Levels",
+      phStatus: "Optimal for most crops"
+    },
+    recommendations: {
+      title: "AI Crop Recommendations",
+      expectedYield: "Expected Yield"
+    },
+    rotation: {
+      title: "Smart Crop Rotation",
+      currentSeason: "Current Season Plan",
+      currentCrop: "Current Crop",
+      nextRecommended: "Next Recommended", 
+      afterNext: "After Next Season",
+      benefit: "Rotation Benefits",
+      benefitDesc: "This rotation will improve soil nitrogen levels by 25% and reduce pest incidence"
+    },
+    irrigation: {
+      title: "Predictive Irrigation",
+      next: "Next Irrigation",
+      aiPredicted: "AI Predicted",
+      date: "Date",
+      duration: "Duration",
+      minutes: "min",
+      irrigateNow: "Irrigate Now",
+      schedule: "Schedule"
+    },
+    diseaseDetection: {
+      title: "AI Disease Detection",
+      aiMonitoring: "AI-Powered Monitoring",
+      description: "Use computer vision to detect early signs of diseases and pests in your crops",
+      scanNow: "Scan Crop Now",
+      lastScan: "Last scan",
+      noIssues: "No issues detected"
+    }
   }
 };

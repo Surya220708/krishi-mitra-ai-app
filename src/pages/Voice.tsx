@@ -13,7 +13,7 @@ interface ChatMessage {
 }
 
 const Voice = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -38,11 +38,11 @@ const Voice = () => {
         };
         setMessages(prev => [...prev, userMessage]);
         
-        // Simulate AI response
+        // Simulate AI response in user's language
         setTimeout(() => {
           const aiResponse: ChatMessage = {
             id: (Date.now() + 1).toString(),
-            text: "The best time to harvest wheat is when the grain moisture is between 18-20%. Look for golden-yellow color and firm grains. Early morning harvesting is ideal to avoid grain loss.",
+            text: getLocalizedResponse(userMessage.text),
             isUser: false,
             timestamp: new Date()
           };
@@ -54,12 +54,43 @@ const Voice = () => {
     }
   };
 
+  const getLanguageCode = () => {
+    const langMap: Record<string, string> = {
+      'en': 'en-IN',
+      'hi': 'hi-IN',
+      'pa': 'pa-IN',
+      'ta': 'ta-IN',
+      'te': 'te-IN',
+      'gu': 'gu-IN',
+      'mr': 'mr-IN',
+      'bn': 'bn-IN'
+    };
+    return langMap[language] || 'en-IN';
+  };
+
   const speakText = (text: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'hi-IN';
+      utterance.lang = getLanguageCode();
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
       speechSynthesis.speak(utterance);
     }
+  };
+
+  const getLocalizedResponse = (query: string) => {
+    // Simulate AI response based on language
+    const responses: Record<string, string> = {
+      'en': "The best time to harvest wheat is when the grain moisture is between 18-20%. Look for golden-yellow color and firm grains. Early morning harvesting is ideal to avoid grain loss.",
+      'hi': "गेहूं की कटाई का सबसे अच्छा समय तब है जब अनाज में नमी 18-20% के बीच हो। सुनहरे-पीले रंग और मजबूत दानों की तलाश करें। अनाज की हानि से बचने के लिए सुबह जल्दी कटाई आदर्श है।",
+      'pa': "ਕਣਕ ਦੀ ਵਾਢੀ ਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸਮਾਂ ਉਦੋਂ ਹੈ ਜਦੋਂ ਅਨਾਜ ਵਿੱਚ ਨਮੀ 18-20% ਦੇ ਵਿਚਕਾਰ ਹੋਵੇ। ਸੁਨਹਿਰੇ-ਪੀਲੇ ਰੰਗ ਅਤੇ ਮਜ਼ਬੂਤ ਦਾਣਿਆਂ ਦੀ ਖੋਜ ਕਰੋ।",
+      'ta': "கோதுமை அறுவடை செய்வதற்கான சிறந்த நேரம் தானியத்தில் ஈரப்பதம் 18-20% க்கு இடையில் இருக்கும் போதுதான். தங்க-மஞ்சள் நிறம் மற்றும் உறுதியான தானியங்களைத் தேடுங்கள்।",
+      'te': "గోధుమ కోత కోసం ఉత్తమ సమయం ధాన్యంలో తేమ 18-20% మధ్య ఉన్నప్పుడు. బంగారు-పసుపు రంగు మరియు గట్టి ధాన్యాలను చూడండి।",
+      'gu': "ઘઉંની લણણીનો શ્રેષ્ઠ સમય જ્યારે અનાજમાં ભેજ 18-20% વચ્ચે હોય છે. સોનેરી-પીળા રંગ અને મજબૂત દાણાની શોધ કરો।",
+      'mr': "गहूची कापणीची सर्वोत्तम वेळ म्हणजे जेव्हा धान्यामध्ये ओलावा 18-20% दरम्यान असतो. सोनेरी-पिवळा रंग आणि मजबूत दाणे शोधा।",
+      'bn': "গমের ফসল কাটার সেরা সময় হল যখন শস্যে আর্দ্রতা 18-20% এর মধ্যে থাকে। সোনালী-হলুদ রঙ এবং শক্ত দানা খুঁজুন।"
+    };
+    return responses[language] || responses['en'];
   };
 
   return (

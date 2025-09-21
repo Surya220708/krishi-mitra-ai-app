@@ -109,6 +109,7 @@ export default {
     home: "होम",
     voice: "आवाज",
     scan: "स्कैन",
+    cropSoil: "फसल मिट्टी",
     calendar: "कैलेंडर",
     sustainability: "स्थिरता",
     weather: "मौसम",
@@ -218,5 +219,50 @@ export default {
   language: {
     title: "भाषा चुनें",
     subtitle: "अपनी पसंदीदा भाषा चुनें"
+  },
+
+  cropSoil: {
+    title: "फसल और मिट्टी प्रबंधन",
+    subtitle: "AI-संचालित मिट्टी स्वास्थ्य निगरानी और फसल प्रबंधन",
+    soilMonitoring: {
+      title: "रियल-टाइम मिट्टी निगरानी",
+      live: "लाइव",
+      moisture: "मिट्टी की नमी",
+      temperature: "मिट्टी का तापमान",
+      optimal: "आदर्श",
+      nutrients: "पोषक तत्व स्तर",
+      phStatus: "अधिकांश फसलों के लिए आदर्श"
+    },
+    recommendations: {
+      title: "AI फसल सुझाव",
+      expectedYield: "अपेक्षित उत्पादन"
+    },
+    rotation: {
+      title: "स्मार्ट फसल चक्र",
+      currentSeason: "वर्तमान मौसम योजना",
+      currentCrop: "वर्तमान फसल",
+      nextRecommended: "अगली सुझावी फसल",
+      afterNext: "अगले मौसम के बाद",
+      benefit: "चक्रीकरण के लाभ",
+      benefitDesc: "यह चक्र मिट्टी के नाइट्रोजन स्तर में 25% सुधार करेगा और कीट प्रकोप कम करेगा"
+    },
+    irrigation: {
+      title: "पूर्वानुमान सिंचाई",
+      next: "अगली सिंचाई",
+      aiPredicted: "AI पूर्वानुमान",
+      date: "तारीख",
+      duration: "अवधि",
+      minutes: "मिनट",
+      irrigateNow: "अभी सिंचाई करें",
+      schedule: "समय निर्धारण"
+    },
+    diseaseDetection: {
+      title: "AI रोग पहचान",
+      aiMonitoring: "AI-संचालित निगरानी",
+      description: "अपनी फसलों में रोगों और कीटों के प्रारंभिक लक्षणों का पता लगाने के लिए कंप्यूटर विज़न का उपयोग करें",
+      scanNow: "अभी फसल स्कैन करें",
+      lastScan: "अंतिम स्कैन",
+      noIssues: "कोई समस्या नहीं मिली"
+    }
   }
 };

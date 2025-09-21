@@ -1,9 +1,39 @@
 export default {
-  common: {
-    greeting: {
-      morning: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ",
-      afternoon: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ",
-      evening: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ"
+  navigation: {
+    home: "ਘਰ",
+    voice: "ਆਵਾਜ਼", 
+    scan: "ਸਕੈਨ",
+    cropSoil: "ਫਸਲ ਮਿੱਟੀ",
+    calendar: "ਕੈਲੇਂਡਰ",
+    sustainability: "ਸਥਿਰਤਾ",
+    weather: "ਮੌਸਮ",
+    market: "ਮਾਰਕੀਟ",
+    profile: "ਪ੍ਰੋਫਾਈਲ"
+  },
+  
+  cropSoil: {
+    title: "ਫਸਲ ਅਤੇ ਮਿੱਟੀ ਪ੍ਰਬੰਧਨ",
+    subtitle: "AI-ਸੰਚਾਲਿਤ ਮਿੱਟੀ ਸਿਹਤ ਨਿਗਰਾਨੀ",
+    soilMonitoring: {
+      title: "ਰੀਅਲ-ਟਾਈਮ ਮਿੱਟੀ ਨਿਗਰਾਨੀ",
+      live: "ਲਾਈਵ",
+      moisture: "ਮਿੱਟੀ ਦੀ ਨਮੀ",
+      temperature: "ਮਿੱਟੀ ਦਾ ਤਾਪਮਾਨ",
+      optimal: "ਆਦਰਸ਼",
+      nutrients: "ਪੋਸ਼ਕ ਤੱਤ ਪੱਧਰ",
+      phStatus: "ਜ਼ਿਆਦਾਤਰ ਫਸਲਾਂ ਲਈ ਆਦਰਸ਼"
+    },
+    recommendations: {
+      title: "AI ਫਸਲ ਸਿਫਾਰਸ਼ਾਂ",
+      expectedYield: "ਸੰਭਾਵਿਤ ਉਤਪਾਦਨ"
+    },
+    rotation: {
+      title: "ਸਮਾਰਟ ਫਸਲ ਚੱਕਰ",
+      currentSeason: "ਮੌਜੂਦਾ ਮੌਸਮ ਯੋਜਨਾ",
+      currentCrop: "ਮੌਜੂਦਾ ਫਸਲ"
+    }
+  }
+};
     },
     loading: "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
     save: "ਸੇਵ ਕਰੋ",

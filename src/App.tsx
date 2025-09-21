@@ -10,6 +10,7 @@ import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import Voice from "./pages/Voice";
 import Camera from "./pages/Camera";
+import CropSoilManagement from "./pages/CropSoilManagement";
 import Calendar from "./pages/Calendar";
 import Sustainability from "./pages/Sustainability";
 import Weather from "./pages/Weather";
@@ -36,6 +37,7 @@ const AppRouter = () => {
       <Route path="/" element={<Home />} />
       <Route path="/voice" element={<Voice />} />
       <Route path="/camera" element={<Camera />} />
+      <Route path="/crop-soil" element={<CropSoilManagement />} />
       <Route path="/calendar" element={<Calendar />} />
       <Route path="/sustainability" element={<Sustainability />} />
       <Route path="/weather" element={<Weather />} />
